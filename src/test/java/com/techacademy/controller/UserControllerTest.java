@@ -13,17 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import org.springframework.web.context.WebApplicationContext;
 
 import com.techacademy.entity.User;
@@ -31,42 +27,41 @@ import com.techacademy.entity.User;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-class USerControllerTest {
-
+class UserControllerTest {
     private MockMvc mockMvc;
 
-    private WebApplicationContext webApplicationContext = null;
+    private final WebApplicationContext webApplicationContext;
 
-    // コンストラクタインジェクション
-    void UserControllerTest2(WebApplicationContext context) {
+    UserControllerTest(WebApplicationContext context) {
         this.webApplicationContext = context;
     }
 
     @BeforeEach
     void beforeEach() {
-        // Spring Security 対応の MockMvc 構築
+        // Spring Securityを有効にする
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
-                .apply(springSecurity())
-                .build();
+                .apply(springSecurity()).build();
     }
 
     @Test
     @DisplayName("User更新画面")
     @WithMockUser
     void testGetUser() throws Exception {
-        MvcResult result = mockMvc.perform(get("/user/update/1/"))
-            .andExpect(status().isOk())
-            .andExpect(model().attributeExists("user"))
-            .andExpect(model().hasNoErrors())
-            .andExpect(view().name("user/update"))
-            .andReturn();
+        // HTTPリクエストに対するレスポンスの検証
+        MvcResult result = mockMvc.perform(get("/user/update/1/")) // URLにアクセス
+            .andExpect(status().isOk()) // ステータスを確認
+            .andExpect(model().attributeExists("user")) // Modelの内容を確認
+            .andExpect(model().hasNoErrors()) // Modelのエラー有無の確認
+            .andExpect(view().name("user/update")) // viewの確認
+            .andReturn(); // 内容の取得
 
-        User user = (User) result.getModelAndView().getModel().get("user");
+        // userの検証
+        // Modelからuserを取り出す
+        User user = (User)result.getModelAndView().getModel().get("user");
         assertEquals(1, user.getId());
         assertEquals("キラメキ太郎", user.getName());
     }
-
     @Test
     @DisplayName("User一覧画面（/user/list）")
     @WithMockUser
