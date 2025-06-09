@@ -41,7 +41,7 @@ public class UserController {
         return "user/register";
     }
 
-    // ----- 変更ここから -----
+
     /** User登録処理 */
     @PostMapping("/register")
     public String postRegister(@Validated User user, BindingResult res, Model model) {
@@ -55,21 +55,34 @@ public class UserController {
         // 一覧画面にリダイレクト
         return "redirect:/user/list";
     }
-    // ----- 変更ここまで -----
 
-    /** User更新画面を表示 */
-    @GetMapping("/update/{id}/")
-    public String getUser(@PathVariable("id") Integer id, Model model) {
-        // Modelに登録
+    // User更新画面を表示: IDが4ならばアドレスは/user/update/4
+    @GetMapping({"/update/{id}/", "/update/"})
+    //71変更中　6/6 12:30pm| 更新画面を表示する時はID必要、エラーの時NULL表示
+    public String getUser(@PathVariable(name = "id", required = false) Integer id, @ModelAttribute User user, Model model) {
+        if(id != null) { //もしIDがnullでないならならば、DBから情報得る
+        // そしてModelに登録する
         model.addAttribute("user", service.getUser(id));
+        } else { //もしIDがnullならば
+            model.addAttribute("user", user);
+        }
         // User更新画面に遷移
         return "user/update";
     }
 
-    /** User更新処理 */
+    // User更新処理| postUser()メソッド
+    //入力から保存する必要がある。エラーがある場合 getUser() メソッドを呼び出し
+    //6/7 76修正中
     @PostMapping("/update/{id}/")
-    public String postUser(User user) {
-        // User登録
+    public String postUser(@PathVariable("id") Integer id, @Validated User user, BindingResult res, Model model) {
+        if(res.hasErrors()) { //res.hasErrors() でエラーの有無を確認。エラーだった場合は getRegister() メソッドを呼び出すことで、User登録画面を表示
+        //エラーある場合も保存が必要だが、再度入力画面へ
+            user.setId(id);
+            return getUser(null, user, model);
+        }
+
+        //ID 保存
+        user.setId(id);
         service.saveUser(user);
         // 一覧画面にリダイレクト
         return "redirect:/user/list";

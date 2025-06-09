@@ -8,28 +8,46 @@
 <body>
     <h1>User情報管理システム</h1>
     <h2>User更新</h2>
+
     <form method="post" th:action="@{/user/update/{id}/(id=${user.id})}" th:object="${user}">
-        <label for="id">ID</label>
-        <input type="hidden" id="id" name="id" th:value="*{id}" th:text="*{id}">
-        <br>
-        <label for="name">名前</label>
-        <input type="text" th:field="*{name}">
-        <br>
-        <label for="gender">性別</label>
-        <select th:field="*{gender}">
-            <option value="" th:text="選択してください">
-            <option th:each="item:${T(com.techacademy.entity.User.Gender).values()}" th:value="${item}" th:text="${item}" th:selected="*{gender} == ${item}">
-        </select>
-        <br>
-        <label for="age">年齢</label>
-        <input type="text" th:field="*{age}">
-        <br>
-        <label for="email">メールアドレス</label>
-        <input type="text" th:field="*{email}">
-        <br>
-        <br>
-        <input type="submit" value="更新実行">
-        <a th:href="@{/user/list}">更新せずに一覧に戻る</a>
+        <div class="form-row">
+            <label>ID</label>
+            <span th:text="*{id}"></span>
+        </div>
+<!-- IDが表示されないのはこのせい？　<input type="hidden" id="id" name="id" th:value="*{id}" th:text="*{id}"> -->
+<!-- <p>ID <span th:text="*{id}"></span></p> サーバーに送信することを考えるとベストではない -->
+        <div class="form-row">
+            <label for="name">名前</label>
+            <input type="text" th:field="*{name}" th:errorclass="err">
+            <span th:errors="*{name}" class="err"></span>
+        </div>
+
+        <div class="form-row">
+            <label for="gender">性別</label>
+            <select th:field="*{gender}" th:errorclass="err">
+                <option value="">選択してください</option>
+                <option th:each="item:${T(com.techacademy.entity.User.Gender).values()}"
+                        th:value="${item}" th:text="${item}"></option>
+            </select>
+            <span th:errors="*{gender}" class="err"></span>
+        </div>
+
+        <div class="form-row">
+            <label for="age">年齢</label>
+            <input type="text" th:field="*{age}" th:errorclass="err">
+            <span th:errors="*{age}" class="err"></span>
+        </div>
+
+        <div class="form-row">
+            <label for="email">メールアドレス</label>
+            <input type="text" th:field="*{email}" th:errorclass="err">
+            <span th:errors="*{email}" class="err"></span>
+        </div>
+
+        <div class="form-row button-row">
+            <input type="submit" value="更新実行">
+            <a th:href="@{/user/list}">更新せずに一覧に戻る</a>
+        </div>
     </form>
 </body>
 </html>

@@ -1,7 +1,38 @@
 @charset "UTF-8";
 
+body {
+    font-family: sans-serif;
+}
+
+.form-row {
+    margin-bottom: 0; /* 空行をなくす */
+    line-height: 1.8; /* ラベルと入力欄の高さを揃える */
+}
+
 label {
     display: inline-block;
     width: 8em;
-    line-height: 150%;
+    vertical-align: top;
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+
+input[type="text"], select {
+    width: 200px;
+    margin: 0;
+    padding: 2px 4px;
+    font-size: 1em;
+}
+
+span.err {
+    color: red;
+    font-size: 0.9em;
+    margin-left: 10px;
+    vertical-align: top;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.button-row {
+    margin-top: 1em;
 }
