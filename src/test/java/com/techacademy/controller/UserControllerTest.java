@@ -31,7 +31,7 @@ import com.techacademy.entity.User;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-class USerControllerTest2 {
+class USerControllerTest {
 
     private MockMvc mockMvc;
 
